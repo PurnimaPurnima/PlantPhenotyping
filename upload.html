@@ -240,6 +240,7 @@
       <p class="intro">Choose an image from your device or drag it into the area below to get started.</p>
 
       <form class="upload-card" id="upload-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
         <div class="drop-zone" id="drop-zone">
           <div id="empty-state">
             <div class="upload-icon" aria-hidden="true">
@@ -260,7 +261,7 @@
           <p class="file-name" id="file-name"></p>
           <button class="remove-button" id="remove-image" type="button">Remove</button>
         </div>
-        <p class="status" id="upload-status" role="status" aria-live="polite"></p>
+        <p class="status" id="upload-status" role="status" aria-live="polite">{{ upload_status }}</p>
         <button class="submit-button" id="upload-button" type="submit" disabled>Upload image</button>
         <p class="fine-print">Select an image file from your device.</p>
       </form>
