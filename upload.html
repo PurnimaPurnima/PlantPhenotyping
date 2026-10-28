@@ -198,6 +198,47 @@
         color: #fff;
       }
 
+      .button-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      .button-row .submit-button {
+        flex: 1;
+        width: auto;
+        margin-top: 0;
+      }
+
+      .view-button {
+        min-height: 44px;
+        padding: 0 18px;
+        border: 1px solid #397a47;
+        border-radius: 10px;
+        background: #fff;
+        color: #2e6539;
+        font: inherit;
+        font-size: 0.9rem;
+        font-weight: 650;
+        cursor: pointer;
+      }
+
+      .view-button:hover {
+        background: #f1f8f1;
+      }
+
+      .uploaded-image-viewer {
+        margin-top: 18px;
+        text-align: center;
+      }
+
+      .uploaded-image-viewer img {
+        max-width: 100%;
+        max-height: 420px;
+        border-radius: 10px;
+        object-fit: contain;
+      }
+
       .submit-button:hover:not(:disabled) {
         background: #2e6539;
       }
@@ -262,7 +303,17 @@
           <button class="remove-button" id="remove-image" type="button">Remove</button>
         </div>
         <p class="status" id="upload-status" role="status" aria-live="polite">{{ upload_status }}</p>
-        <button class="submit-button" id="upload-button" type="submit" disabled>Upload image</button>
+        <div class="button-row">
+          <button class="submit-button" id="upload-button" type="submit" disabled>Upload image</button>
+          {% if uploaded_image_data %}
+            <button class="view-button" id="view-uploaded-image" type="button" aria-expanded="false" aria-controls="uploaded-image-viewer">View image</button>
+          {% endif %}
+        </div>
+        {% if uploaded_image_data %}
+          <div class="uploaded-image-viewer" id="uploaded-image-viewer" hidden>
+            <img src="{{ uploaded_image_data }}" alt="Uploaded image">
+          </div>
+        {% endif %}
         <p class="fine-print">Select an image file from your device.</p>
       </form>
     </main>
@@ -277,8 +328,19 @@
       const fileName = document.querySelector("#file-name");
       const removeButton = document.querySelector("#remove-image");
       const uploadButton = document.querySelector("#upload-button");
+      const viewUploadedImageButton = document.querySelector("#view-uploaded-image");
+      const uploadedImageViewer = document.querySelector("#uploaded-image-viewer");
       const status = document.querySelector("#upload-status");
       let previewUrl;
+
+      if (viewUploadedImageButton && uploadedImageViewer) {
+        viewUploadedImageButton.addEventListener("click", () => {
+          const isExpanded = viewUploadedImageButton.getAttribute("aria-expanded") === "true";
+          uploadedImageViewer.hidden = isExpanded;
+          viewUploadedImageButton.setAttribute("aria-expanded", String(!isExpanded));
+          viewUploadedImageButton.textContent = isExpanded ? "View image" : "Hide image";
+        });
+      }
 
       function clearImage() {
         fileInput.value = "";
